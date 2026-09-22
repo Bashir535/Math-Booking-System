@@ -28,7 +28,6 @@ set +a
 ./mvnw spring-boot:run
 ```
 
-On macOS, select an installed JDK 21 with `export JAVA_HOME=$(/usr/libexec/java_home -v 21)`. In the IDE, select JDK 21 and provide the environment variables from `.env`.
 
 View the JSON responses in a browser, Postman, or curl:
 
@@ -56,11 +55,10 @@ Stop Spring Boot with Ctrl+C and PostgreSQL with `docker compose stop`. Database
 | `PORT` | `8090` |
 | `DB_PORT` | Compose host port, default `5432`; update `DB_URL` if changed |
 
-The supplied PostgreSQL container supports the `btree_gist` and `pgcrypto` extensions required by the schema. An existing database user must have permission to create those extensions and tables.
 
 Startup loads `schema.sql` followed by `seed.sql`. A fresh database contains two tutors, three subjects, one sample student, and 28 slots over the next seven days. Repeated startup preserves existing rows and adds missing sample slots for the coming week. Schema changes will require migrations later; `CREATE TABLE IF NOT EXISTS` does not alter existing tables.
 
-Sample accounts contain BCrypt hashes of random passwords whose plaintext is not retained. These are database fixtures, not usable login accounts. Authentication is future work.
+Sample accounts contain BCrypt hashes of random passwords where plaintext is not retained. These are database fixtures, not usable login accounts. Authentication is future work.
 
 ## Build and test
 
@@ -87,7 +85,3 @@ src/main/resources/
 src/test/java/com/example/bookingsystem/
 ```
 
-## Repository and walkthrough
-
-- Repository: https://github.com/Bashir535/Math-Booking-System
-- Code-walkthrough video: pending recording and upload.
