@@ -1,6 +1,6 @@
 # Booking System
 
-Milestone 1: a math tutoring appointment system skeleton using Java 21, Spring Boot, PostgreSQL, and handwritten SQL through JDBC.
+Milestone 1: a math tutoring appointment system skeleton using Java 21, Spring Boot, PostgreSQL, SQL through JDBC.
 
 ## Included in this milestone
 
@@ -10,11 +10,11 @@ Milestone 1: a math tutoring appointment system skeleton using Java 21, Spring B
 - Two database-backed read endpoints: home catalog and available slots.
 - PostgreSQL integration tests and local database setup.
 
-There is no implemented frontend or login/booking workflow in this milestone. React is the planned frontend for later work. The proposal describes the full project, but this submission's code is the read-only skeleton.
+There is no implemented frontend or login/booking workflow in this milestone. React is the planned frontend for later work. 
 
 ## Run locally
 
-Requirements: JDK 21 and running Docker Desktop. The Maven wrapper is included. First-time setup needs network access to download Maven dependencies and the PostgreSQL image.
+Requirements: JDK 21 and running Docker Desktop. The Maven wrapper is included. First time setup needs network access to download Maven dependencies and the PostgreSQL image.
 
 If `.env` does not exist, copy `.env.example` to `.env` and choose a local `DB_PASSWORD`. Do not commit `.env`.
 
@@ -56,9 +56,9 @@ Stop Spring Boot with Ctrl+C and PostgreSQL with `docker compose stop`. Database
 | `DB_PORT` | Compose host port, default `5432`; update `DB_URL` if changed |
 
 
-Startup loads `schema.sql` followed by `seed.sql`. A fresh database contains two tutors, three subjects, one sample student, and 28 slots over the next seven days. Repeated startup preserves existing rows and adds missing sample slots for the coming week. Schema changes will require migrations later; `CREATE TABLE IF NOT EXISTS` does not alter existing tables.
+Startup loads `schema.sql` followed by `seed.sql`. A database contains two tutors, three subjects, one sample student, and 28 slots over the next seven days. Repeated startup preserves existing rows and adds missing sample slots for the coming week. Schema changes will require migrations later, `CREATE TABLE IF NOT EXISTS` does not alter existing tables.
 
-Sample accounts contain BCrypt hashes of random passwords where plaintext is not retained. These are database fixtures, not usable login accounts. Authentication is future work.
+Sample accounts contain hashes of random passwords where plaintext is not retained. These are database fixtures, not usable login accounts. Authentication is future work.
 
 ## Build and test
 
@@ -66,7 +66,7 @@ Sample accounts contain BCrypt hashes of random passwords where plaintext is not
 ./mvnw clean verify
 ```
 
-Tests use Testcontainers to start an isolated PostgreSQL database, so Docker must be running. They check the two read endpoints, initialization, future-slot selection, and database constraints. Booking/cancellation rows created in tests exercise the schema only; there are no booking/cancellation application endpoints. The two-thread transaction test belongs to Milestone 2.
+Tests use Test containers to start an isolated PostgreSQL database, so Docker must be running. They check the two read endpoints, initialization, future slot selection, and database constraints. Booking/cancellation rows created in tests exercise the schema only, there are no booking/cancellation application endpoints. The two-thread transaction test belongs to Milestone 2.
 
 The executable artifact is `target/booking-system-0.0.1-SNAPSHOT.jar`.
 
