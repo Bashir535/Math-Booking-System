@@ -1,12 +1,12 @@
 # Booking System
 
-Milestone 1: a math tutoring appointment system skeleton using Java 21, Spring Boot, PostgreSQL, and SQL through JDBC.
+Milestone 1: A math tutoring appointment system skeleton using Java 21, Spring Boot, PostgreSQL, and SQL through JDBC.
 
 ## Included in this milestone
 
 - Controller → Service → Repository layers and JSON DTOs.
 - Five required tables: users, providers, services, availability_slots, appointments.
-- Startup `schema.sql` and `seed.sql`, including the database double-booking guard.
+- Startup `schema.sql` and `seed.sql`, including the database double booking guard.
 - Two database-backed read endpoints: home catalog and available slots.
 - PostgreSQL integration tests and local database setup.
 
@@ -41,7 +41,7 @@ curl http://localhost:8090/api/slots
 | `GET /api/home` | Project title, time zone, tutors, and tutoring services |
 | `GET /api/slots` | List of future, available tutoring slots |
 
-Both endpoints read PostgreSQL through the application layers and return explicit DTOs. No filtering or pagination is implemented yet. There is no HTML page at `/`.
+Both endpoints read PostgreSQL through the application layers and return explicit DTOs. No filtering is implemented yet. There is no HTML page at `/`.
 
 Stop Spring Boot with Ctrl+C and PostgreSQL with `docker compose stop`. Database data remains in the named Docker volume.
 
@@ -53,7 +53,7 @@ Stop Spring Boot with Ctrl+C and PostgreSQL with `docker compose stop`. Database
 | `DB_USERNAME` | `booking` |
 | `DB_PASSWORD` | Required local database password |
 | `PORT` | `8090` |
-| `DB_PORT` | Compose host port, default `5432`; update `DB_URL` if changed |
+| `DB_PORT` | Compose host port, default `5432`, update `DB_URL` if changed |
 
 
 Startup loads `schema.sql` followed by `seed.sql`. A database contains two tutors, three subjects, one sample student, and 28 slots over the next seven days. Repeated startup preserves existing rows and adds missing sample slots for the coming week. Schema changes will require migrations later, `CREATE TABLE IF NOT EXISTS` does not alter existing tables.
