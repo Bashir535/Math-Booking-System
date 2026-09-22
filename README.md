@@ -60,15 +60,6 @@ Startup loads `schema.sql` followed by `seed.sql`. A database contains two tutor
 
 Sample accounts contain hashes of random passwords where plaintext is not retained. These are database fixtures, not usable login accounts. Authentication is future work.
 
-## Build and test
-
-```sh
-./mvnw clean verify
-```
-
-Tests use Test containers to start an isolated PostgreSQL database, so Docker must be running. They check the two read endpoints, initialization, future slot selection, and database constraints. Booking/cancellation rows created in tests exercise the schema only, there are no booking/cancellation application endpoints. The two-thread transaction test belongs to Milestone 2.
-
-The executable artifact is `target/booking-system-0.0.1-SNAPSHOT.jar`.
 
 ## Project structure
 
