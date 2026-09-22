@@ -1,6 +1,6 @@
 # Booking System
 
-Milestone 1: a math tutoring appointment system skeleton using Java 21, Spring Boot, PostgreSQL, SQL through JDBC.
+Milestone 1: a math tutoring appointment system skeleton using Java 21, Spring Boot, PostgreSQL, and SQL through JDBC.
 
 ## Included in this milestone
 
@@ -14,7 +14,7 @@ There is no implemented frontend or login/booking workflow in this milestone. Re
 
 ## Run locally
 
-Requirements: JDK 21 and running Docker Desktop. The Maven wrapper is included. First time setup needs network access to download Maven dependencies and the PostgreSQL image.
+Requirements: JDK 21 and running Docker Desktop. The Maven wrapper is included. 
 
 If `.env` does not exist, copy `.env.example` to `.env` and choose a local `DB_PASSWORD`. Do not commit `.env`.
 
