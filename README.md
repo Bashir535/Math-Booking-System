@@ -54,7 +54,7 @@ Open the URL printed by Vite, usually **http://localhost:5173**. The backend run
 | Endpoint | Response |
 |---|---|
 | `GET /api/home` | Tutors and tutoring subjects |
-| `GET /api/slots` | Filtered and paginated available sessions |
+| `GET /api/slots` | Filtered available sessions |
 | `POST /api/auth/login` | Signs in and establishes the authenticated session |
 | `POST /api/auth/logout` | Ends the session |
 | `GET /api/customer/appointments` | The student's appointments |
@@ -84,7 +84,7 @@ Run tests from the project directory with Docker running:
 | `DB_PORT` | Compose host port, default `5432`; update `DB_URL` if changed |
 | `BOOKING_DEMO_PASSWORD` | Optional password setup for the three sample accounts |
 
-Startup loads `schema.sql` followed by `seed.sql`. A fresh database contains two tutors, three subjects, one sample student, and 28 slots over the next seven days. Repeated startup preserves existing rows and adds missing sample slots without reopening removed slots.
+Startup loads `schema.sql` followed by `seed.sql`. Database contains two tutors, three subjects, one sample student, and 28 slots over the next seven days. Repeated startup preserves existing rows and adds missing sample slots without reopening removed slots.
 
 Passwords are stored as BCrypt hashes. Booking uses a transaction and a slot row lock, with a unique index to prevent multiple active appointments for the same slot. Cancellation preserves appointment history.
 
