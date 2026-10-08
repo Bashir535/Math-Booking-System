@@ -1,6 +1,6 @@
 # Booking System
 
-Milestone 2: A math tutoring appointment system using React, Java 21, Spring Boot, PostgreSQL, and SQL through JDBC.
+Milestone 2: A math tutoring appointment system using React, Java 21, Spring Boot, PostgreSQL, and SQL.
 
 ## Included in this milestone
 
@@ -16,8 +16,6 @@ Milestone 2: A math tutoring appointment system using React, Java 21, Spring Boo
 ## Run locally
 
 Requirements: JDK 21, Node.js 22.12 or newer, and running Docker Desktop. The Maven wrapper is included.
-
-If `.env` does not exist, copy `.env.example` to `.env` and choose a local `DB_PASSWORD`. Keep an existing `.env` file. Do not commit `.env`.
 
 From the project directory:
 
@@ -74,7 +72,6 @@ Run tests from the project directory with Docker running:
 ./mvnw clean verify
 ```
 
-Stop the backend and frontend with Ctrl+C and PostgreSQL with `docker compose stop`. Database data remains in the named Docker volume.
 
 ## Configuration
 
