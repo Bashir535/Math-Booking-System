@@ -8,7 +8,7 @@ ON CONFLICT (username) DO NOTHING;
 INSERT INTO providers (user_id, display_name, bio)
 SELECT id, full_name,
     CASE username
-        WHEN 'maya.chen' THEN 'Algebra and calculus tutoring with step-by-step practice.'
+        WHEN 'maya.chen' THEN 'Algebra and calculus tutoring with guided practice.'
         ELSE 'Geometry and algebra tutoring focused on building confidence.'
     END
 FROM users WHERE username IN ('maya.chen', 'daniel.reyes')
@@ -16,7 +16,7 @@ ON CONFLICT (user_id) DO NOTHING;
 
 INSERT INTO services (name, description, duration_minutes, price)
 VALUES
-    ('Algebra', 'Equations, functions, and problem-solving practice.', 60, 35.00),
+    ('Algebra', 'Equations, functions, and problem solving practice.', 60, 35.00),
     ('Geometry', 'Shapes, proofs, and coordinate geometry.', 60, 35.00),
     ('Calculus', 'Limits, derivatives, and integrals.', 60, 45.00)
 ON CONFLICT (name) DO NOTHING;
@@ -37,4 +37,6 @@ JOIN (VALUES
     ('daniel.reyes', 'Algebra', TIME '15:00')
 ) AS sessions(username, service_name, at_time) ON sessions.username = u.username
 JOIN services s ON s.name = sessions.service_name
+WHERE NOT EXISTS (SELECT 1 FROM availability_slots old WHERE old.provider_id=p.id AND old.starts_at=
+    ((CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')::date + days.day + sessions.at_time) AT TIME ZONE 'America/Los_Angeles')
 ON CONFLICT DO NOTHING;

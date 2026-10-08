@@ -61,3 +61,11 @@ CREATE INDEX IF NOT EXISTS slots_by_service_and_date
 
 CREATE INDEX IF NOT EXISTS appointments_by_customer
     ON appointments (customer_id, created_at);
+
+ALTER TABLE availability_slots ADD COLUMN IF NOT EXISTS removed BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE availability_slots DROP CONSTRAINT IF EXISTS unique_provider_start;
+ALTER TABLE availability_slots DROP CONSTRAINT IF EXISTS no_overlapping_provider_slots;
+ALTER TABLE availability_slots ADD CONSTRAINT no_overlapping_provider_slots EXCLUDE USING gist (
+    provider_id WITH =, tstzrange(starts_at, ends_at, '[)') WITH &&
+) WHERE (NOT removed);
+CREATE UNIQUE INDEX IF NOT EXISTS unique_visible_provider_start ON availability_slots(provider_id,starts_at) WHERE NOT removed;

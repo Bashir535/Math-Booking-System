@@ -40,6 +40,5 @@ frontend/dist/
 
 /docs/
 /output/
-/frontend/
 /HELP.md
 *.code-workspace
