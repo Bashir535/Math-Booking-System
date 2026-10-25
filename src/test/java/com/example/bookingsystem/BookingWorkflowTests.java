@@ -21,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
-@SpringBootTest
+@SpringBootTest(properties = "notification.worker.enabled=false")
 @AutoConfigureMockMvc
 @Testcontainers
 class BookingWorkflowTests {

@@ -3,6 +3,8 @@ package com.example.bookingsystem.service;
 import static org.springframework.http.HttpStatus.*;
 
 import com.example.bookingsystem.dto.AppointmentDto;
+import com.example.bookingsystem.notification.NotificationQueue;
+import com.example.bookingsystem.notification.NotificationRequest.Type;
 import com.example.bookingsystem.repository.BookingRepository;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -16,8 +18,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class BookingService {
 
     private final BookingRepository repository;
+    private final NotificationQueue notifications;
 
-    public BookingService(BookingRepository repository) {
+    public BookingService(BookingRepository repository, NotificationQueue notifications) {
+        this.notifications = notifications;
         this.repository = repository;
     }
 
@@ -43,7 +47,9 @@ public class BookingService {
             CONFLICT,
             "This slot is no longer available."
         );
-        return repository.insert(customer, slotId, serviceId);
+        long id = repository.insert(customer, slotId, serviceId);
+        notifications.enqueue(id, Type.BOOKED);
+        return id;
     }
 
     public void cancel(long customer, long id) {
@@ -73,6 +79,7 @@ public class BookingService {
             "Only future appointments can be cancelled."
         );
         repository.cancel(id);
+        notifications.enqueue(id, Type.CANCELLED);
     }
 
     public long create(long user, long service, OffsetDateTime start) {

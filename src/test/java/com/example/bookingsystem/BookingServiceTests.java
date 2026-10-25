@@ -19,7 +19,7 @@ class BookingServiceTests {
     @BeforeEach
     void setup() {
         repository = mock(BookingRepository.class);
-        service = new BookingService(repository);
+        service = new BookingService(repository, mock(com.example.bookingsystem.notification.NotificationQueue.class));
     }
 
     void slot(boolean removed, int days) {

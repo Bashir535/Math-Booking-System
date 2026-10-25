@@ -1,0 +1,14 @@
+.git
+.env
+.env.*
+!.env.example
+.vscode
+.idea
+.DS_Store
+**/.DS_Store
+target
+frontend/node_modules
+frontend/dist
+docs
+output
+*.code-workspace

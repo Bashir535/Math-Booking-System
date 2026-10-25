@@ -69,3 +69,25 @@ ALTER TABLE availability_slots ADD CONSTRAINT no_overlapping_provider_slots EXCL
     provider_id WITH =, tstzrange(starts_at, ends_at, '[)') WITH &&
 ) WHERE (NOT removed);
 CREATE UNIQUE INDEX IF NOT EXISTS unique_visible_provider_start ON availability_slots(provider_id,starts_at) WHERE NOT removed;
+
+CREATE TABLE IF NOT EXISTS notification_outbox (
+    id UUID PRIMARY KEY,
+    appointment_id BIGINT NOT NULL REFERENCES appointments(id) ON DELETE CASCADE,
+    recipient VARCHAR(80) NOT NULL,
+    type VARCHAR(20) NOT NULL CHECK(type IN ('BOOKED','CANCELLED','REMINDER')),
+    message VARCHAR(1000) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    next_attempt_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    delivery_rounds INTEGER NOT NULL DEFAULT 0,
+    delivered_at TIMESTAMPTZ,
+    UNIQUE(appointment_id,type)
+);
+CREATE INDEX IF NOT EXISTS notifications_due ON notification_outbox(next_attempt_at) WHERE delivered_at IS NULL;
+
+CREATE TABLE IF NOT EXISTS notification_receipts (
+    id UUID PRIMARY KEY,
+    recipient VARCHAR(80) NOT NULL,
+    type VARCHAR(20) NOT NULL CHECK(type IN ('BOOKED','CANCELLED','REMINDER')),
+    message VARCHAR(1000) NOT NULL,
+    received_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
