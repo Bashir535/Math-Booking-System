@@ -9,19 +9,19 @@ Milestone 3: A math tutoring appointment system using React, Java 21, Spring Boo
 - Mock booking and cancellation notifications sent through an HTTP Gateway.
 - Notifications queued with the appointment change and sent after the transaction commits.
 - Notification timeouts, retries, duplicate protection, and recovery after failure.
-- INFO, WARN, and ERROR logs for bookings, notifications, and database failures.
+- info, warn, and error logs for bookings, notifications, and database failures.
 - Database health checks and booking and notification metrics.
 - Docker setup for the frontend, backend, and PostgreSQL.
 - GitHub Actions workflow that tests and builds the project on pushes and pull requests.
-- 35 unit and integration tests, including concurrent booking and notification failure scenarios.
+- 35 unit and integration tests
 
 ## Run locally
 
 Requirements: Running Docker Desktop. Docker builds React and Java 21 inside containers, so local Java and Node installations are not needed to run the app. Local backend tests require JDK 21; the Maven wrapper is included.
 
-From the main project directory, copy `.env.example` to `.env` if `.env` does not already exist. Set `DB_PASSWORD` and `NOTIFICATION_API_KEY`. Keep the existing database password if you already have a database volume. Do not commit `.env`.
+From the main project directory, copy `.env.example`. Set `DB_PASSWORD` and `NOTIFICATION_API_KEY`. Keep the existing database password if you already have a database volume.
 
-For the first login setup on a fresh database, choose a sample account password of at least 12 characters. Run these commands in macOS zsh before starting the app:
+For the first login setup on a new database, choose a account password of at least 12 characters. Run these commands in macOS zsh before starting the app:
 
 ```sh
 read -s 'BOOKING_DEMO_PASSWORD?Choose a sample account password: '
@@ -34,9 +34,9 @@ Start the app and database:
 docker compose up -d --build --wait
 ```
 
-Open **http://localhost:8090**. React and Spring Boot run together in the app container. No separate frontend terminal is needed. If port 8090 is occupied, set `APP_PORT=18090` in `.env` and open **http://localhost:18090** instead.
+Open **http://localhost:8090**. React and Spring Boot run together in the app container. No separate frontend terminal is needed. If port 8090 is occupied, set `APP_PORT=18090` and open **http://localhost:18090** instead.
 
-The sample accounts are `alex.student`, `maya.chen`, and `daniel.reyes`. Alex is a student; Maya and Daniel are tutors. All three use the password you chose. Existing passwords are preserved when `BOOKING_DEMO_PASSWORD` is not set.
+The sample accounts are `alex.student`, `maya.chen`, and `daniel.reyes`. Alex is a student, Maya and Daniel are tutors. All three use the password you chose. Existing passwords are preserved when `BOOKING_DEMO_PASSWORD` is not set.
 
 After the first password setup, remove the initializer from the app container:
 
@@ -45,12 +45,12 @@ unset BOOKING_DEMO_PASSWORD
 docker compose up -d --force-recreate --wait app
 ```
 
-On later starts, use `docker compose up -d --build --wait` without setting the sample password again.
+On later starts, use `docker compose up -d --build --wait` without setting the password again.
 
 | Endpoint | Response |
 |---|---|
 | `GET /api/home` | Tutors and tutoring subjects |
-| `GET /api/slots` | Filtered and paginated available sessions |
+| `GET /api/slots` | Filtered available sessions |
 | `GET /api/auth/session` | Current account and CSRF token |
 | `POST /api/auth/login` | Signs in and establishes the authenticated session |
 | `POST /api/auth/logout` | Ends the session |
@@ -60,7 +60,7 @@ On later starts, use `docker compose up -d --build --wait` without setting the s
 | `GET /api/provider/appointments` | Appointments booked with the tutor |
 | `POST /api/provider/slots` | Adds tutor availability |
 | `DELETE /api/provider/slots/{id}` | Removes the tutor's unbooked availability |
-| `POST /internal/notifications` | Records a mock notification; requires `X-Notification-Key` |
+| `POST /internal/notifications` | Records a mock notification, requires `X-Notification-Key` |
 | `GET /health` | Database connectivity: HTTP 200 when UP, 503 when DOWN |
 | `GET /metrics` | Created and cancelled booking totals, pending and delivered notifications |
 
@@ -74,7 +74,7 @@ curl http://localhost:8090/metrics
 docker compose logs --tail=50 app
 ```
 
-Use your configured `APP_PORT` in these URLs if you changed it. Notifications are simulated; no real email or SMS is sent. To test an outage, set `NOTIFICATION_STUB_AVAILABLE=false` in `.env` and recreate the app with `docker compose up -d --force-recreate --wait app`. Booking still succeeds while notifications remain pending. Restore the setting to `true` and recreate the app to resume delivery.
+Use your configured `APP_PORT` in these URLs if you changed it. Notifications are simulated, no real email or SMS is sent. To test an outage, set `NOTIFICATION_STUB_AVAILABLE=false`. and recreate the app with `docker compose up -d --force-recreate --wait app`. Booking still succeeds while notifications remain pending. Restore the setting to `true` and recreate the app to resume delivery.
 
 Run tests from the project directory with JDK 21 selected and Docker running:
 
@@ -82,7 +82,7 @@ Run tests from the project directory with JDK 21 selected and Docker running:
 ./mvnw clean verify
 ```
 
-GitHub Actions runs these tests, builds React, builds the Docker image, and saves test results on every push and pull request. It does not deploy a public website.
+GitHub Actions runs these tests, builds React, builds the Docker image, and saves test results on every push and pull request. 
 
 Stop the app and database with `docker compose stop`. Data remains in the named Docker volume.
 
@@ -103,9 +103,9 @@ Stop the app and database with `docker compose stop`. Data remains in the named 
 | `NOTIFICATION_URL` | Direct Java runs: defaults to `/internal/notifications` on the local server; can point to another service |
 | `NOTIFICATION_TIMEOUT_MS` | Direct Java runs: `1000`; allowed range is 50 to 5000 ms |
 
-Compose forwards the shared key and stub settings from `.env`. Custom notification URLs and timeouts require adding those variables to the app service's environment in `docker-compose.yml`.
+Compose forwards the shared key and stub settings. Custom notification URLs and timeouts require adding those variables to the app service's environment in `docker-compose.yml`.
 
-Startup loads `schema.sql` followed by `seed.sql`. A fresh database contains two tutors, three subjects, one sample student, and 28 slots over the next seven days. Repeated startup preserves existing rows and adds missing sample slots without reopening removed slots.
+Startup loads `schema.sql` followed by `seed.sql`. A new database contains two tutors, three subjects, one sample student, and 28 slots over the next seven days. Repeated startup preserves existing rows and adds missing sample slots without reopening removed slots.
 
 Passwords are stored as BCrypt hashes. Booking uses a transaction and a slot row lock, with a unique index to prevent multiple active appointments for the same slot. Cancellation preserves appointment history.
 
